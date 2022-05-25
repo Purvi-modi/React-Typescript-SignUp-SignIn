@@ -15,6 +15,9 @@
     "@types/react-dom": "^18.0.4",
     "@types/react-redux": "^7.1.24",
     "axios": "^0.27.2",
+    "axios-mock-adapter": "^1.20.0",
+    "D": "^1.0.0",
+    "jest": "^28.1.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-redux": "^8.0.1",
@@ -26,7 +29,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
