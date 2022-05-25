@@ -6,18 +6,19 @@ export class DataFetcher {
       email: email,
       password: password,
     });
-    if (response.status === 200) {
+
+    if (typeof response !== "undefined" && response.status === 200) {
       return response.data;
     }
     return [];
   }
 
   static async login(email: string, password: string): Promise<string> {
-    const response = await Axios.post("http://localhost:8000/login", {
+    const response = await Axios.post("http://127.0.0.1:8000/login", {
       email: email,
       password: password,
     });
-    if (response.status === 200) {
+    if (typeof response !== "undefined" && response.status === 200) {
       return response.data[0]["email"];
     }
     return "";

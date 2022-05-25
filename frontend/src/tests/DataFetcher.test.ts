@@ -1,42 +1,19 @@
-import mockAxios from "jest-mock-axios";
+import axios from "axios";
+import { DataFetcher } from "../Entities/DataFetcher";
+jest.mock("axios");
 
-import { BASE_URL, fetchUsers } from "./utils";
+test("login", async () => {
+  const mockedAxios = axios as jest.Mocked<any>;
+  let data = "abc@xyz.co";
+  const mockedPost = mockedAxios.post.mockReturnValueOnce(data);
+  const result = await DataFetcher.login("asdq", "Adasd");
+  expect(axios.post).toHaveBeenCalled();
+});
 
-describe("fetchUsers", () => {
-  afterEach(() => {
-    mockAxios.reset();
-  });
-
-  describe("when API call is successful", () => {
-    it("should return users list", async () => {
-      // given
-      const users = [
-        { id: 1, name: "John" },
-        { id: 2, name: "Andrew" },
-      ];
-      mockAxios.get.mockResolvedValueOnce(users);
-
-      // when
-      const result = await fetchUsers();
-
-      // then
-      expect(mockAxios.get).toHaveBeenCalledWith(`${BASE_URL}/users`);
-      expect(result).toEqual(users);
-    });
-  });
-
-  describe("when API call fails", () => {
-    it("should return empty users list", async () => {
-      // given
-      const message = "Network Error";
-      mockAxios.get.mockRejectedValueOnce(new Error(message));
-
-      // when
-      const result = await fetchUsers();
-
-      // then
-      expect(mockAxios.get).toHaveBeenCalledWith(`${BASE_URL}/users`);
-      expect(result).toEqual([]);
-    });
-  });
+test("register", async () => {
+  const mockedAxios = axios as jest.Mocked<any>;
+  let data = "abc@xyz.co";
+  const mockedPost = mockedAxios.post.mockReturnValueOnce(data);
+  const result = await DataFetcher.register("asdq", "Adasd");
+  expect(axios.post).toHaveBeenCalled();
 });

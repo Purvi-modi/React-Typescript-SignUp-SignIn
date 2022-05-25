@@ -16,13 +16,14 @@ export const Login = () => {
   const [password, setPassword] = useState("");
 
   const login = () => {
-    DataFetcher.login(email, password).then((response) => {
+    DataFetcher.login(email, password).then((response: any) => {
       console.log(response);
 
       if (response === "") {
         alert("Wrong email/password combination!");
       } else {
         const email = response;
+        console.log(email);
         alert("Welcome " + email);
       }
     });
