@@ -1,36 +1,41 @@
-import { Card, Button, Grid, Typography, TextField, Box } from "@mui/material";
-import { useEffect, useState } from "react";
-import Axios from "axios";
-import { DataFetcher } from "../../Entities/DataFetcher";
-import { shallowEqual } from "react-redux";
-
-import ValidateInputs from "./entities/ValidateInputs";
-import { useSelector } from "react-redux";
-import { errorsState } from "./app/Reducer";
 import { useDispatch } from "react-redux";
 import { store } from "./app/store";
+import { Card, Button, Grid, Typography, TextField, Box } from "@mui/material";
+import { useState } from "react";
+import { DataFetcher } from "../../Entities/DataFetcher";
+import background from "../../assets/BlueClock.jpg";
+import useWindowDimensions from "../../Hooks/WindowsDimensions";
 import { reset_errors } from "./app/Actions";
+import ValidateInputs from "./entities/ValidateInputs";
+import { DUPLICATE_ENTRY, SUCCESSFULLY_REGISTERED } from "../../constants";
+import { useHistory } from "react-router-dom";
 
 export const Register = () => {
+  const { width, height } = useWindowDimensions();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [errors, setErrors]: any = useState([]);
-
-  // const errors = useSelector<errorsState, errorsState["errors"]>(
-  //   (state) => state.errors
-  // );
+  const history = useHistory();
 
   const dispatch = useDispatch();
 
+  const LoadLoginPage = () => {
+    history.push("login");
+  };
+
   const register_user = () => {
-    // Flush previous errors list
     dispatch(reset_errors());
 
     if (ValidateInputs(email, password, confirmPassword, dispatch)) {
       DataFetcher.register(email, password).then((response) => {
-        alert("User Successfully Registered!");
+        if (response === DUPLICATE_ENTRY) {
+          alert("User already exists. Try logging in!");
+        } else if (response === SUCCESSFULLY_REGISTERED) {
+          alert("User Successfully Registered!");
+        }
       });
     } else {
       setErrors(store.getState().errors);
@@ -38,7 +43,35 @@ export const Register = () => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        backgroundImage: `url(${background})`,
+        height: height,
+        width: width,
+        backgroundPosition: "center",
+        backgroundRepeat: "norepeat",
+        backgroundSize: "cover",
+        margin: "-10px",
+        padding: "0px",
+      }}
+    >
+      <Button
+        style={{
+          float: "right",
+          marginTop: "15px",
+          marginRight: "15px",
+          color: "#191970",
+          background: "white",
+          textTransform: "none",
+          borderColor: "transparent",
+          borderRadius: 10,
+        }}
+        variant="outlined"
+        size="large"
+        onClick={LoadLoginPage}
+      >
+        <b>Already a User?</b>
+      </Button>
       <Box
         sx={{
           justifyContent: "center",
@@ -191,6 +224,6 @@ export const Register = () => {
           </Grid>
         </Card>
       </Box>
-    </>
+    </div>
   );
 };

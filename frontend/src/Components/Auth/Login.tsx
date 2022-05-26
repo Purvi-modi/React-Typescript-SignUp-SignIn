@@ -1,36 +1,43 @@
-import {
-  Card,
-  Button,
-  Grid,
-  Typography,
-  TextField,
-  styled,
-  Box,
-} from "@mui/material";
-import Axios from "axios";
+import { Card, Button, Grid, Typography, TextField, Box } from "@mui/material";
+import { useHistory, withRouter } from "react-router-dom";
 import { useState } from "react";
 import { DataFetcher } from "../../Entities/DataFetcher";
+import background from "../../assets/BlueClock.jpg";
+import useWindowDimensions from "../../Hooks/WindowsDimensions";
+import { useDispatch } from "react-redux";
+import { loggedIn } from "../app/Actions";
 
-export const Login = () => {
+const Login = () => {
+  const { width, height } = useWindowDimensions();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  const login = () => {
+  const handleLogin = () => {
     DataFetcher.login(email, password).then((response: any) => {
-      console.log(response);
-
       if (response === "") {
         alert("Wrong email/password combination!");
       } else {
-        const email = response;
-        console.log(email);
-        alert("Welcome " + email);
+        dispatch(loggedIn());
+        history.push("dashboard1");
       }
     });
   };
 
   return (
-    <>
+    <div
+      style={{
+        backgroundImage: `url(${background})`,
+        height: height,
+        width: width,
+        backgroundPosition: "center",
+        backgroundRepeat: "norepeat",
+        backgroundSize: "cover",
+        margin: "-10px",
+        padding: "0px",
+      }}
+    >
       <Box
         sx={{
           justifyContent: "center",
@@ -112,13 +119,15 @@ export const Login = () => {
                 borderRadius: 50,
               }}
               size="large"
-              onClick={login}
+              onClick={handleLogin}
             >
               Login
             </Button>
           </Grid>
         </Card>
       </Box>
-    </>
+    </div>
   );
 };
+
+export default withRouter(Login);

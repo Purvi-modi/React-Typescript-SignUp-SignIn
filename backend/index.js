@@ -8,6 +8,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const SUCCESSFULLY_REGISTERED = "successfully registered";
+const DUPLICATE_ENTRY = "duplicate entry";
+
 const db = mysql.createConnection({
   user: "root",
   host: "localhost",
@@ -18,16 +21,24 @@ const db = mysql.createConnection({
 app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  db.query(
-    "INSERT INTO users (email,password) values (?,?)",
-    [email, password],
-    (err, result) => {
-      console.log(err);
-      if (result) {
-        res.send(result);
-      }
+
+  db.query("SELECT * FROM users WHERE email = ?", [email], (err, result) => {
+    console.log(err);
+    if (result.length > 0) {
+      res.send(DUPLICATE_ENTRY);
+    } else {
+      db.query(
+        "INSERT INTO users (email,password) values (?,?)",
+        [email, password],
+        (err, result) => {
+          console.log(err);
+          if (result) {
+            res.send(SUCCESSFULLY_REGISTERED);
+          }
+        }
+      );
     }
-  );
+  });
 });
 
 app.post("/login", (req, res) => {
@@ -42,7 +53,7 @@ app.post("/login", (req, res) => {
       }
 
       if (result.length > 0) {
-        res.send(result);
+        res.send(email);
       } else {
         res.send({ message: " Wrong email/password combination!" });
       }

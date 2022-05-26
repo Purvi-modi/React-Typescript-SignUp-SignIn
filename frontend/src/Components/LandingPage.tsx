@@ -2,7 +2,7 @@ import { Button, Card } from "@mui/material";
 import { Register } from "./Auth/Register";
 import background from "../assets/BlueClock.jpg";
 import { useState } from "react";
-import { Login } from "./Auth/Login";
+import Login from "./Auth/Login";
 import useWindowDimensions from "../Hooks/WindowsDimensions";
 
 export const LandingPage = () => {
